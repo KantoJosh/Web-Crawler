@@ -2,7 +2,7 @@ import re
 
 
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, urldefrag
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -18,7 +18,7 @@ def extract_next_links(url, resp):
     links = []
     for a in soup.find_all('a', href = True):
         #print("before=",a['href'],"after=",urljoin(url,a['href']))
-        abs_url = urljoin(url,a['href'])
+        abs_url = urldefrag(urljoin(url,a['href']))[0]
         if(is_valid(abs_url)):
             links.append(abs_url)
     return links
