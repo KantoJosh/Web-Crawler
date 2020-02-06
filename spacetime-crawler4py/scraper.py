@@ -10,7 +10,7 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     # Implementation requred.
-    if resp != None:
+    if not resp.error and resp.status == 200 and resp.raw_response != None:
         raw = resp.raw_response.content
     else:
         return []
