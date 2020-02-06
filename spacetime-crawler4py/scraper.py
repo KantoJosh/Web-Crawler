@@ -10,13 +10,18 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     # Implementation requred.
-    raw = resp.raw_response.content
+    if resp != None:
+        raw = resp.raw_response.content
+    else:
+        return []
     soup = BeautifulSoup(raw, 'html.parser')
+    links = []
     for a in soup.find_all('a', href = True):
-        x = urljoin(url,a['href'])
-        if(is_valid(x)):
-            print(x)
-    return list()
+        #print("before=",a['href'],"after=",urljoin(url,a['href']))
+        abs_url = urljoin(url,a['href'])
+        if(is_valid(abs_url)):
+            links.append(abs_url)
+    return links
 
 def is_valid(url):
     try:
