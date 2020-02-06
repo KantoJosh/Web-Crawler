@@ -26,10 +26,11 @@ def extract_next_links(url, resp):
 def is_valid(url):
     try:
         parsed = urlparse(url)
+        print("PATH",url,parsed,parsed.path)
         if parsed.scheme not in set(["http", "https"]):
             return False
         return re.match(r"(.*(\.ics\.uci\.edu\/*|\.cs\.uci\.edu\/|\.informatics\.uci\.edu\/|\.stat\.uci\.edu\/|today\.uci\.edu\/department\/information_computer_sciences).*)",
-                        url) and not re.match(r".*\?replytocom.*",parsed.path.lower()) and not re.match(
+                        url) and not re.match(r".*replytocom.*",parsed.query.lower()) and not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"
                 + r"|png|tiff?|mid|mp2|mp3|mp4"
                 + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
