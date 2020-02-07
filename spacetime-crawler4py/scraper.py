@@ -10,7 +10,6 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    # Implementation requred.
     if not resp.error and resp.status == 200 and resp.raw_response != None:
         raw = resp.raw_response.content
     else:
@@ -22,8 +21,9 @@ def extract_next_links(url, resp):
         abs_url = urldefrag(urljoin(url,a['href']))[0]
         if(is_valid(abs_url)):
             parsed = urlparse(abs_url)
+            #domain + path + params + query. Doesn't include scheme because some links have both http and https
             check_duplicate = parsed.netloc.lower() + parsed.path.lower() + parsed.params.lower() + parsed.query.lower()
-            if(check_duplicate not in visited):
+            if(check_duplicate not in visited): #add to dict to avoid downloading a URL that has been crawled already
                 visited[check_duplicate] = 0
                 links.append(abs_url)
     return links
@@ -31,7 +31,7 @@ def extract_next_links(url, resp):
 def is_valid(url):
     try:
         parsed = urlparse(url)
-        path_params = parsed.path.lower()
+        path_params = parsed.path.lower().split("/")
         
         #Check to see that path params arent repeating, i.e, stayconnected/stayconnected/stayconnected/stayconnected
         if(len(path_params) > 1):
