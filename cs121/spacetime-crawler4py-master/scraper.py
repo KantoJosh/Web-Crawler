@@ -16,7 +16,6 @@ def extract_next_links(url, resp):
         return []
     soup = BeautifulSoup(raw, 'html.parser')
     links = []
-    print("test")
     for a in soup.find_all('a', href = True):
         #print("before=",a['href'],"after=",urljoin(url,a['href']))
         abs_url = urldefrag(urljoin(url,a['href']))[0]
