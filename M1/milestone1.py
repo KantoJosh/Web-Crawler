@@ -15,16 +15,28 @@ def main():
     #if len(sys.argv) <= 1:
     #    print('Need a HTML/JSON file to open')
     #    exit()
-    listFile = []
-    listFile = os.listdir("ANALYST")
-    onlyfiles = [f for f in listdir("ANALYST\www_cs_uci_edu") if isfile(join("ANALYST\www_cs_uci_edu", f))]
-    data = {}   # Empty dict
-    for file in onlyfiles:
-        f = open("ANALYST\www_cs_uci_edu\\" + file, 'r')
-        data = json.load(f)
-        url = ''
-        url = data['url']
-        print(url)
+    listFolder = []
+    listFolder = os.listdir("ANALYST")
+    data = {}
+    for folder in listFolder:
+        files = []
+        files = [f for f in listdir("ANALYST\\"+folder) if isfile(join("ANALYST\\"+folder, f))]
+        for file in files:
+            f = open("ANALYST\\" + folder + "\\" + file, 'r')
+            data = json.load(f)
+            url = ''
+            url = data['url']
+            print(url)
+
+    ##### Testing out json and os functions #####
+    #onlyfiles = [f for f in listdir("ANALYST\www_cs_uci_edu") if isfile(join("ANALYST\www_cs_uci_edu", f))]
+    #data = {}   # Empty dict
+    #for file in onlyfiles:
+    #    f = open("ANALYST\www_cs_uci_edu\\" + file, 'r')
+    #    data = json.load(f)
+    #    url = ''
+    #    url = data['url']
+    #    print(url)
     #with open('test.json', 'r') as f:
     #    data = json.load(f)
     #print(data)
