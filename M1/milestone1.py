@@ -2,6 +2,9 @@ import json
 import re
 import sys
 import os
+import urllib
+import time
+import requests
 from os import listdir
 from os.path import isfile, join
 from collections import defaultdict
@@ -16,18 +19,33 @@ def main():
     #    print('Need a HTML/JSON file to open')
     #    exit()
     listFolder = []
-    listFolder = os.listdir("ANALYST")
-    data = {}
+    listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
+    data = []
+    urlDict = defaultdict(list)
+    urlNum = dict()
+    urlNumInt = 0
+    url = ''
     for folder in listFolder:
         files = []
-        files = [f for f in listdir("ANALYST\\"+folder) if isfile(join("ANALYST\\"+folder, f))]
+        files = [f for f in listdir("DEV\\"+folder) if isfile(join("DEV\\"+folder, f))]
         for file in files:
-            f = open("ANALYST\\" + folder + "\\" + file, 'r')
+            f = open("DEV\\" + folder + "\\" + file, 'r')
             data = json.load(f)
-            url = ''
-            url = data['url']
-            print(url)
-
+            url = data['url'] # Extracts url from json content (data)
+            if url not in urlDict[folder]: # Check for duplicate urls
+                urlDict[folder].append(url)
+                urlNumInt += 1
+        urlNum[folder] = urlNumInt # Number of urls from each folder (Just testing)
+        urlNumInt = 0
+    for folder in listFolder:
+        for url in urlDict[folder]:
+            x = requests.get(url)   # Requests html from the website
+            if x.status_code == 200 and not x.error and x.raw_response != None:
+                soup = BeautifulSoup(x.raw_response.content, "lxml")
+                # Create indexer function here (Index texts w/ tokenization, stem, and so on)
+            time.sleep(0.5)
+            
+    #print(urlDict)
     ##### Testing out json and os functions #####
     #onlyfiles = [f for f in listdir("ANALYST\www_cs_uci_edu") if isfile(join("ANALYST\www_cs_uci_edu", f))]
     #data = {}   # Empty dict
