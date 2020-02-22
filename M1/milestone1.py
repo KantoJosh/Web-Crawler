@@ -9,7 +9,8 @@ from os import listdir
 from os.path import isfile, join
 from collections import defaultdict
 from tokenizer import tokenize,output_fifty_most_common_words
-#from bs4 import BeautifulSoup
+from indexer import create_index
+from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag
 
 postList = defaultdict(list)
@@ -19,7 +20,9 @@ def main():
     #    print('Need a HTML/JSON file to open')
     #    exit()
     listFolder = []
-    listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
+    cwd = os.getcwd()
+    print(cwd)
+    listFolder = os.listdir("ANALYST")  # Gives a list of folder from the given folder
     data = []
     urlDict = defaultdict(list)
     urlNum = dict()
@@ -27,9 +30,9 @@ def main():
     url = ''
     for folder in listFolder:
         files = []
-        files = [f for f in listdir("DEV\\"+folder) if isfile(join("DEV\\"+folder, f))]
+        files = [f for f in listdir("ANALYST/"+folder) if isfile(join("ANALYST/"+folder, f))]
         for file in files:
-            f = open("DEV\\" + folder + "\\" + file, 'r')
+            f = open("ANALYST/" + folder + "/" + file, 'r')
             data = json.load(f)
             url = data['url'] # Extracts url from json content (data)
             if url not in urlDict[folder]: # Check for duplicate urls
@@ -40,10 +43,12 @@ def main():
     for folder in listFolder:
         for url in urlDict[folder]:
             x = requests.get(url)   # Requests html from the website
-            if x.status_code == 200 and not x.error and x.raw_response != None:
-                soup = BeautifulSoup(x.raw_response.content, "lxml")
+            if x.status_code == 200:
+                soup = BeautifulSoup(x.content, "lxml")
+                index = create_index(soup, url)
                 # Create indexer function here (Index texts w/ tokenization, stem, and so on)
             time.sleep(0.5)
+            exit()
             
     #print(urlDict)
     ##### Testing out json and os functions #####
