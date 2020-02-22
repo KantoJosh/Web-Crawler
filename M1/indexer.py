@@ -44,7 +44,7 @@ class InvertedIndex:
         for t in soup.find_all("b"):
             parseBold = self.Parse(t.text)
         for t in soup.find_all(re.compile('^h[1-6]$')):
-            parseHeader = self.Parse
+            parseHeader = self.Parse(t.text)
         for t in soup.find_all("p"):
             id = id + 1
             parseText = self.Parse(t.text)  # Tokens
