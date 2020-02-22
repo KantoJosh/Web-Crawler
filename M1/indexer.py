@@ -1,3 +1,4 @@
+import re
 from collections import defaultdict
 #from tokenizer import tokenize,output_fifty_most_common_words
 from bs4 import BeautifulSoup
@@ -17,25 +18,43 @@ class InvertedIndex:
 
     def Parse(self, text):
         word = ''
-        wordList = list()
+        wordList = []
         stemmer = PorterStemmer()
         for char in text:
             if self._isal(char):    # Check for A-Z, a-z
                 word += char
             else:
                 if word != "":
-                    wordList.append(stemmer.stem(word.lower()))
+                    if stemmer.stem(word.lower()) not in wordList:  # Check for duplicates
+                        wordList.append(stemmer.stem(word.lower()))
                 word = ""
-        if word != "":  # Just in case the last word will not be left out...
+        if word != "" and stemmer.stem(word.lower()) not in wordList:  # Just in case the last word will not be left out...
             wordList.append(stemmer.stem(word.lower()))
         return wordList
     
     def index_text(self, soup, url):
         parseText = []
+        parseTitle = []
+        parseHeader = []
+        parseBold = []
         id = 0
+        indexer = dict()
+        for t in soup.find_all("title"):
+            parseTitle = self.Parse(t.text)
+        for t in soup.find_all("b"):
+            parseBold = self.Parse(t.text)
+        for t in soup.find_all(re.compile('^h[1-6]$')):
+            parseHeader = self.Parse
         for t in soup.find_all("p"):
             id = id + 1
             parseText = self.Parse(t.text)  # Tokens
+            parseAll = parseText + parseBold + parseHeader + parseTitle
+            for token in parseAll:
+                # Add posting into indexer (Find tf-idf and id for posting lists)
+                if token not in indexer:
+                    indexer[token] = [id, 0]
+                else:
+                    indexer[token].append([id, 0])
 
 def create_index(soup, url):
     index = InvertedIndex()
