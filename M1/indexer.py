@@ -33,18 +33,29 @@ class InvertedIndex:
         return wordList
     
     def index_text(self, soup, url):
+        # list of texts
         parseText = []
         parseTitle = []
         parseHeader = []
         parseBold = []
+        # docID
         id = 0
+        # Indexer
         indexer = dict()
+        
+        # Get tokens from title tag
         for t in soup.find_all("title"):
             parseTitle = self.Parse(t.text)
+
+        # Get tokens from bold tag
         for t in soup.find_all("b"):
             parseBold = self.Parse(t.text)
+
+        # Get tokens from header tags
         for t in soup.find_all(re.compile('^h[1-6]$')):
             parseHeader = self.Parse(t.text)
+
+        # Get tokens from p tag and combine other tokens together in order to create indexer
         for t in soup.find_all("p"):
             id = id + 1
             parseText = self.Parse(t.text)  # Tokens
