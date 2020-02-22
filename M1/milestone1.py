@@ -41,14 +41,15 @@ def main():
         urlNum[folder] = urlNumInt # Number of urls from each folder (Just testing)
         urlNumInt = 0
     for folder in listFolder:
-        for url in urlDict[folder]:
-            x = requests.get(url)   # Requests html from the website
-            if x.status_code == 200:
-                soup = BeautifulSoup(x.content, "lxml")
-                index = create_index(soup, url)
+        create_index(urlDict[folder])
+        #for url in urlDict[folder]:
+            #x = requests.get(url)   # Requests html from the website
+            #if x.status_code == 200:
+            #    soup = BeautifulSoup(x.content, "lxml")
+            #    index = create_index(soup, url)
                 # Create indexer function here (Index texts w/ tokenization, stem, and so on)
-            time.sleep(0.5)
-            exit()
+            #time.sleep(0.5)
+            #exit()
             
     #print(urlDict)
     ##### Testing out json and os functions #####
