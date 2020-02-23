@@ -35,10 +35,10 @@ class Posting:
         return self.tf
     # Print docID and tf
     def print(self):
-        return print(self.docID, self.tf)
+        print(self.docID, self.tf)
     # Print a list of docID and tf-idf
     def showList(self):
-        return print([self.docID, self.tfidf])
+        print([self.docID, self.tfidf])
 
 # Class for inverted index
 class InvertedIndex:
