@@ -22,8 +22,8 @@ def main():
     #    exit()
     listFolder = []
     cwd = os.getcwd()
-    print(cwd)
-    listFolder = os.listdir("ANALYST")  # Gives a list of folder from the given folder
+    #print(cwd)
+    listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
     data = []
     urlDict = defaultdict(list)
     urlNum = dict()
@@ -44,7 +44,7 @@ def main():
     final_index = InvertedIndex()
     for folder in listFolder:
         index = create_index(urlDict[folder])
-        final_index.merge(index)
+        final_index.merge(index.getDict())
         #for url in urlDict[folder]:
             #x = requests.get(url)   # Requests html from the website
             #if x.status_code == 200:

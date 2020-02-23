@@ -10,6 +10,10 @@ from nltk.stem import PorterStemmer
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag    
 
+# Global variable
+numOfIndexedDoc = 0
+uniqueWord = 0
+
 # Class for posting list
 # So you finish indexer w/ docID and tf first. Then use indexer (loop all) to get df for each word/docID...?
 class Posting:
@@ -49,6 +53,9 @@ class InvertedIndex:
     def __repr__(self):
         return str(self.index)
 
+    def getDict(self):
+        return self.index
+
     def merge(self, index):
         return self.index.update(index)
 
@@ -56,9 +63,12 @@ class InvertedIndex:
         return  ((ord('A') <= ord(char) <= ord('Z')) or (ord('a') <= ord(char) <= ord('z')) or (ord(char) == ord("\'")))
 
     def Parse(self, text):
+        global uniqueWord
         word = ''
         wordList = []
         stemmer = PorterStemmer()
+        for escape_char in ["\n", "\t", "\r"]:
+            text = text.replace(escape_char, " ")
         for char in text:
             if self._isal(char):    # Check for A-Z, a-z
                 word += char
@@ -66,6 +76,7 @@ class InvertedIndex:
                 if word != "":
                     if stemmer.stem(word.lower()) not in wordList:  # Check for duplicates
                         wordList.append(stemmer.stem(word.lower()))
+                        uniqueWord += 1 # Number of unique words
                 word = ""
         if word != "" and stemmer.stem(word.lower()) not in wordList:  # Just in case the last word will not be left out...
             wordList.append(stemmer.stem(word.lower()))
@@ -95,13 +106,14 @@ class InvertedIndex:
 
         # Get tokens from p tag and combine other tokens together in order to create indexer
         #wordOccurence = dict()  # Number of times a word appear in a url
-        
+        global numOfIndexedDoc
         wordDictionary = set()
         sizeOfText = 0 # Total number of words in the url
         #tfDict = dict() # Number of times a word appear in a url divided by the total number of words in the url
         #df = {} # Number of urls that contain a word
         numOfUrls = len(urlList) # Use this to get idf (Number of urls divided by number of urls that contain a word)
         for url in urlList:
+            numOfIndexedDoc += 1 # Number of indexed documents
             id = id + 1 # id for docID
             x = requests.get(url)   # Get html file
             if x.status_code == 200:
@@ -146,4 +158,6 @@ class InvertedIndex:
 def create_index(urlList):
     index = InvertedIndex()
     index.index_text(urlList)
+    print("Number of indexed documents:", numOfIndexedDoc)
+    print("Number of unique words:", uniqueWord)
     return index
