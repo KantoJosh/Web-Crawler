@@ -5,11 +5,12 @@ import os
 import urllib
 import time
 import requests
+import pickle
 from os import listdir
 from os.path import isfile, join
 from collections import defaultdict
-from tokenizer import tokenize,output_fifty_most_common_words
-from indexer import create_index
+#from tokenizer import tokenize,output_fifty_most_common_words
+from indexer import create_index, InvertedIndex
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag
 
@@ -30,9 +31,9 @@ def main():
     url = ''
     for folder in listFolder:
         files = []
-        files = [f for f in listdir("ANALYST/"+folder) if isfile(join("ANALYST/"+folder, f))]
+        files = [f for f in listdir("DEV/"+folder) if isfile(join("DEV/"+folder, f))]
         for file in files:
-            f = open("ANALYST/" + folder + "/" + file, 'r')
+            f = open("DEV/" + folder + "/" + file, 'r')
             data = json.load(f)
             url = data['url'] # Extracts url from json content (data)
             if url not in urlDict[folder]: # Check for duplicate urls
@@ -40,8 +41,10 @@ def main():
                 urlNumInt += 1
         urlNum[folder] = urlNumInt # Number of urls from each folder (Just testing)
         urlNumInt = 0
+    final_index = InvertedIndex()
     for folder in listFolder:
-        create_index(urlDict[folder])
+        index = create_index(urlDict[folder])
+        final_index.merge(index)
         #for url in urlDict[folder]:
             #x = requests.get(url)   # Requests html from the website
             #if x.status_code == 200:
@@ -50,29 +53,14 @@ def main():
                 # Create indexer function here (Index texts w/ tokenization, stem, and so on)
             #time.sleep(0.5)
             #exit()
-            
-    #print(urlDict)
-    ##### Testing out json and os functions #####
-    #onlyfiles = [f for f in listdir("ANALYST\www_cs_uci_edu") if isfile(join("ANALYST\www_cs_uci_edu", f))]
-    #data = {}   # Empty dict
-    #for file in onlyfiles:
-    #    f = open("ANALYST\www_cs_uci_edu\\" + file, 'r')
-    #    data = json.load(f)
-    #    url = ''
-    #    url = data['url']
-    #    print(url)
-    #with open('test.json', 'r') as f:
-    #    data = json.load(f)
-    #print(data)
-    #url = ''
-    #url = data['url']
-    #print(url)
-    #i = 0
-    #for file in onlyfiles:
-    #    print(file)
-    #    i = i + 1
-    #    if i == 10:
-    #        break
+    filename = "indexer.txt"
+    fileObject = open(filename, 'wb')
+    pickle.dump(final_index, fileObject)
+    fileObject.close()
+    fileObject = open(filename, 'r')
+    new_index = pickle.load(fileObject)
+    fileObject.close()
+
     
 if __name__ == "__main__":
     main()
