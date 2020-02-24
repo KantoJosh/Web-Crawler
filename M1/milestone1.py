@@ -21,7 +21,7 @@ def main():
     #    print('Need a HTML/JSON file to open')
     #    exit()
     listFolder = []
-    cwd = os.getcwd()
+    #cwd = os.getcwd()
     #print(cwd)
     listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
     data = []
@@ -41,25 +41,17 @@ def main():
                 urlNumInt += 1
         urlNum[folder] = urlNumInt # Number of urls from each folder (Just testing)
         urlNumInt = 0
-    final_index = InvertedIndex()
+    #final_index = InvertedIndex()
+    i = 0
     for folder in listFolder:
         index = create_index(urlDict[folder])
-        final_index.merge(index.getDict())
-        #for url in urlDict[folder]:
-            #x = requests.get(url)   # Requests html from the website
-            #if x.status_code == 200:
-            #    soup = BeautifulSoup(x.content, "lxml")
-            #    index = create_index(soup, url)
-                # Create indexer function here (Index texts w/ tokenization, stem, and so on)
-            #time.sleep(0.5)
-            #exit()
-    filename = "indexer.txt"
-    fileObject = open(filename, 'wb')
-    pickle.dump(final_index, fileObject)
-    fileObject.close()
-    fileObject = open(filename, 'r')
-    new_index = pickle.load(fileObject)
-    fileObject.close()
+        filename = "indexer" + str(i) + ".txt"
+        fileObject = open(filename, 'wb')
+        pickle.dump(index.getDict(), fileObject)
+        fileObject.close()
+        i += 1
+        #final_index.merge(index.getDict())
+
 
     
 if __name__ == "__main__":
