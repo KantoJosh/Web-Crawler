@@ -1,6 +1,7 @@
 import linecache
 import re
 import sys
+import json
 
 def get_stop_words(text_file):
     """Reads stop word file and adds to a set, returning it"""
@@ -31,6 +32,13 @@ def tokenize(text,freq):
     return word_count
     #return freq
 
+def tokenize_regex(exp,text):
+    for esc_char in ["\n","\r","\t"]:
+            text = text.replace(esc_char," ")
+    tokens = re.findall("[a-zA-Z]{2,}",data['content'])
+    return tokens
+
+
 def _isal(char):
     '''Determines if char is alphanumeric (had to use my own version of isalnum 
     because the native version returns True for foreign characters)'''
@@ -46,3 +54,12 @@ def output_fifty_most_common_words(freq):
         MCwords.append(freq[k])
         i += 1
     return MCwords
+
+
+if __name__=="__main__":
+    with open("/home/igessess/cs121/Assignment3/M1/ANALYST/www_cs_uci_edu/0a0056fb9a53ec6f190aa2b5fb1a97c33cd69726c8841f89d24fa5abd84d276c.json") as file:
+        data = json.load(file)
+        for esc_char in ["\n","\r","\t"]:
+            data['content'] = data['content'].replace(esc_char," ")
+        tokens = re.findall("[a-zA-Z]{2,}|\d{1,}",data['content'])
+        print(tokens)
