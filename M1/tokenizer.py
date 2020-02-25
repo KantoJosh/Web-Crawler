@@ -2,7 +2,7 @@ import linecache
 import re
 import sys
 import json
-
+from nltk.stem import PorterStemmer
 def get_stop_words(text_file):
     """Reads stop word file and adds to a set, returning it"""
     stop_words = set()
@@ -33,10 +33,14 @@ def tokenize(text,freq):
     #return freq
 
 def tokenize_regex(exp,text):
+    word_set = set()
+    ps = PorterStemmer()
     for esc_char in ["\n","\r","\t"]:
             text = text.replace(esc_char," ")
-    tokens = re.findall("[a-zA-Z]{2,}",data['content'])
-    return tokens
+    tokens = re.findall(exp,text)
+    for word in tokens:
+        word_set.add(ps.stem(word.lower()))
+    return word_set
 
 
 def _isal(char):
@@ -59,7 +63,4 @@ def output_fifty_most_common_words(freq):
 if __name__=="__main__":
     with open("/home/igessess/cs121/Assignment3/M1/ANALYST/www_cs_uci_edu/0a0056fb9a53ec6f190aa2b5fb1a97c33cd69726c8841f89d24fa5abd84d276c.json") as file:
         data = json.load(file)
-        for esc_char in ["\n","\r","\t"]:
-            data['content'] = data['content'].replace(esc_char," ")
-        tokens = re.findall("[a-zA-Z]{2,}|\d{1,}",data['content'])
-        print(tokens)
+        print(tokenize_regex("[a-zA-Z]{2,}|\d{1,}",data['content']))

@@ -19,7 +19,6 @@ def main():
     #if len(sys.argv) <= 1:
     #    print('Need a HTML/JSON file to open')
     #    exit()
-    listFolder = []
     #cwd = os.getcwd()
     #print(cwd)
     listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
@@ -33,7 +32,7 @@ def main():
     for folder in listFolder:
         files = []
         files = [f for f in listdir("DEV/"+folder) if isfile(join("DEV/"+folder, f))]
-        index = create_index(files, folder)
+        index = create_index(files, folder) # one index per folder in DEV
         filename = "indexer" + str(i) + ".txt"
         fileObject = open(filename, 'wb')
         pickle.dump(index.getDict(), fileObject)
