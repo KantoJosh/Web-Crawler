@@ -125,7 +125,7 @@ class InvertedIndex:
         
 
 def create_index(fileList, folder):
-    index = InvertedIndex()
+    index = InvertedIndex() 
     index.index_text(fileList, folder)
     print("Number of indexed documents:", numOfIndexedDoc)
     print("Number of unique words:", len(uniqueWords))

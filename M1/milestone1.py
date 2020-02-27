@@ -21,25 +21,21 @@ def main():
     #    exit()
     #cwd = os.getcwd()
     #print(cwd)
-    listFolder = os.listdir("DEV")  # Gives a list of folder from the given folder
+    listFolder = os.listdir("DEV")  # gets list of sub folder names in DEV/
     #data = []
     #urlDict = dict()
     urlNum = dict()
-    urlNumInt = 0
     #url = ''
     i = 0
     #docID = 0
     for folder in listFolder:
-        files = []
-        files = [f for f in listdir("DEV/"+folder) if isfile(join("DEV/"+folder, f))]
+        files = [f for f in listdir("DEV/"+folder) if isfile(join("DEV/"+folder, f))] # every file in var folder
         index = create_index(files, folder) # one index per folder in DEV
         filename = "indexer" + str(i) + ".txt"
-        fileObject = open(filename, 'wb')
-        pickle.dump(index.getDict(), fileObject)
-        fileObject.close()
-        i += 1
-        urlNum[folder] = urlNumInt # Number of urls from each folder (Just testing)
-        urlNumInt = 0
+        fileObject = open(filename, 'wb')           # create partial index per subfolder
+        pickle.dump(index.getDict(), fileObject)        # dump the dictionary of the index into a file 
+        fileObject.close()                     
+        urlNum[folder] = 0 # Number of urls from each folder (Just testing)
     #final_index = InvertedIndex()
     '''
     i = 0
@@ -52,6 +48,7 @@ def main():
         i += 1
         #final_index.merge(index.getDict())
     '''
+    
 
 
     
