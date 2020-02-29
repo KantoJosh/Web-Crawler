@@ -3,44 +3,14 @@ from indexer import create_index, InvertedIndex, Posting
 def main():
     i = 0
     final_result = InvertedIndex()
-    #wordDict = dict(list()) #dict(set())   # Can delete this comment
-
+    
     # Load all indexes into one InvertedIndex() (class object for index)
     for i in range(88):
         f = open("indexer"+str(i)+".txt", 'rb')
-        #testDict = pickle.load(f)  # Can delete this comment
-        #final_result.merge(testDict)   # Can delete this comment
+
         final_result.merge(pickle.load(f))
         f.close()
-
-    # Extract all info from class object into wordDict
-    for i in final_result.getDict():
-        print(i, end = ' [')
-        for postList in final_result.getDict()[i]:
-            for post in postList:
-                print(post.docID, end = ', ')
-        print(']\n')
-
-            # Need wordDict to work (Feel free to delete this comment)
-            #if i not in wordDict:
-                #wordDict[i] = list()
-            #wordDict[i].append(post)
-            # Set method
-            #if i not in wordDict:
-                #wordDict[i] = set()
-            #wordDict[i].add(post)
-    print("length of dict", len(final_result.getDict()))
-
-    # (Feel free to delete this comment
-    # Sorting wordDict based on docID
-    # sorted() is used on set (wordDict[i])
-    #for i in wordDict:
-        #wordDict[i] = sorted(wordDict[i], key=lambda x: x.docID) # Set method
-        #wordDict[i].sort(key=lambda x: x.docID)
-        #for post in wordDict[i]:
-            #print(i, post.docID)
-
-    '''
+    
     aDict = dict(list())
     bDict = dict(list())
     cDict = dict(list())
@@ -70,96 +40,171 @@ def main():
     numDict = dict(list())
 
     # Creating separate dictionaries for each alphabet
-    for i in wordDict:
+    for i in final_result.getDict():
         if i[0].lower() == 'a': # i is a string
-            aDict[i] = wordDict[i]  # wordDict[i] ==> List of Posting()
+            aDict[i] = final_result.getDict()[i]  # wordDict[i] ==> List of Posting()
         elif i[0].lower() == 'b':
-            bDict[i] = wordDict[i]
+            bDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'b':
-            cDict[i] = wordDict[i]
+            cDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'd':
-            dDict[i] = wordDict[i]
+            dDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'e':
-            eDict[i] = wordDict[i]
+            eDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'f':
-            fDict[i] = wordDict[i]
+            fDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'g':
-            gDict[i] = wordDict[i]
+            gDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'h':
-            hDict[i] = wordDict[i]
+            hDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'i':
-            iDict[i] = wordDict[i]
+            iDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'j':
-            jDict[i] = wordDict[i]
+            jDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'k':
-            kDict[i] = wordDict[i]
+            kDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'l':
-            lDict[i] = wordDict[i]
+            lDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'm':
-            mDict[i] = wordDict[i]
+            mDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'n':
-            nDict[i] = wordDict[i]
+            nDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'o':
-            oDict[i] = wordDict[i]
+            oDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'p':
-            pDict[i] = wordDict[i]
+            pDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'q':
-            qDict[i] = wordDict[i]
+            qDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'r':
-            rDict[i] = wordDict[i]
+            rDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 's':
-            sDict[i] = wordDict[i]
+            sDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 't':
-            tDict[i] = wordDict[i]
+            tDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'u':
-            uDict[i] = wordDict[i]
+            uDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'v':
-            vDict[i] = wordDict[i]
+            vDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'w':
-            wDict[i] = wordDict[i]
+            wDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'x':
-            xDict[i] = wordDict[i]
+            xDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'y':
-            yDict[i] = wordDict[i]
+            yDict[i] = final_result.getDict()[i]
         elif i[0].lower() == 'z':
-            zDict[i] = wordDict[i]:
+            zDict[i] = final_result.getDict()[i]
         else:
-            numDict[i] = wordDict[i]
-    '''
+            numDict[i] = final_result.getDict()[i]
 
-    
-    '''
-    alphabetList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    alphabetDict = dict(list())
-    numDict = dict(list())
-    for i in wordDict:
-        if i[0].lower() not in alphabetDict and i[0].lower() in alphabetList:
-            alphabetDict[i[0].lower()] = list()
-        if i[0].lower() in alphabetList:
-            alphabetDict[i[0].lower()].append(wordDict[i])
-    for alpha in alphabetList:
-        fileObject = open(alpha + ".txt", 'wb')
-        pickle.dump(alphabetDict.items(), fileObject)
-        fileObject.close()
-
-    fileObject = open ('a.txt', 'rb')
-    newDict = pickle.load(fileObject)
-    for i in newDict:
-        print(i)
+    # Creating separate indexers
+    fileObject = open("a.txt", 'wb')
+    pickle.dump(aDict, fileObject)
     fileObject.close()
-    '''
-    # No sorted() is used
-    #for i in wordDict:
-    #    for docID in wordDict[i]:
-    #        print(i, docID)
+
+    fileObject = open("b.txt", 'wb')
+    pickle.dump(bDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("c.txt", 'wb')
+    pickle.dump(cDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("d.txt", 'wb')
+    pickle.dump(dDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("e.txt", 'wb')
+    pickle.dump(eDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("f.txt", 'wb')
+    pickle.dump(fDict, fileObject)
+    fileObject.close()
     
-    #f = open("indexer1.txt", 'rb')
-    #testDict = pickle.load(f)
-    #for i in testDict:
-    #    for post in testDict[i]:
-    #        print(i, post.docID)
-    #f.close()
-    
+    fileObject = open("g.txt", 'wb')
+    pickle.dump(gDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("h.txt", 'wb')
+    pickle.dump(hDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("i.txt", 'wb')
+    pickle.dump(iDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("j.txt", 'wb')
+    pickle.dump(jDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("k.txt", 'wb')
+    pickle.dump(kDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("l.txt", 'wb')
+    pickle.dump(lDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("m.txt", 'wb')
+    pickle.dump(mDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("n.txt", 'wb')
+    pickle.dump(nDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("o.txt", 'wb')
+    pickle.dump(oDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("p.txt", 'wb')
+    pickle.dump(pDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("q.txt", 'wb')
+    pickle.dump(qDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("r.txt", 'wb')
+    pickle.dump(rDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("s.txt", 'wb')
+    pickle.dump(sDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("t.txt", 'wb')
+    pickle.dump(tDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("u.txt", 'wb')
+    pickle.dump(uDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("v.txt", 'wb')
+    pickle.dump(vDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("w.txt", 'wb')
+    pickle.dump(wDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("x.txt", 'wb')
+    pickle.dump(xDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("y.txt", 'wb')
+    pickle.dump(yDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("z.txt", 'wb')
+    pickle.dump(zDict, fileObject)
+    fileObject.close()
+
+    fileObject = open("num.txt", 'wb')
+    pickle.dump(numDict, fileObject)
+    fileObject.close()
+
 
 if __name__ == "__main__":
     main()
