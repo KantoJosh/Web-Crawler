@@ -36,6 +36,7 @@ def main():
         pickle.dump(index.getDict(), fileObject)        # dump the dictionary of the index into a file 
         fileObject.close()                     
         urlNum[folder] = 0 # Number of urls from each folder (Just testing)
+        i += 1
     #final_index = InvertedIndex()
     '''
     i = 0

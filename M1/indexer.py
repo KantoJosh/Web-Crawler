@@ -86,9 +86,9 @@ class InvertedIndex:
         for f in fileList:
             docID += 1
             numOfIndexedDoc += 1 # Number of indexed documents
-            fileObj = open("DEV\\" + folder + "\\" + f, 'r')
+            fileObj = open("DEV/" + folder + "/" + f, 'r')
             data = json.load(fileObj)
-            urlDict[data['url']] = docID
+            urlDict[docID] = data['url']
             soup = BeautifulSoup(data['content'], "lxml") # Get delicious soup from html file
             wordOccurence = dict() #(KEEP)
             tfDict = dict() #(KEEP)
