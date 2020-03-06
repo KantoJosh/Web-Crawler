@@ -10,7 +10,7 @@ from os import listdir
 from os.path import isfile, join
 from collections import defaultdict
 #from tokenizer import tokenize,output_fifty_most_common_words
-from indexer import create_index, InvertedIndex, urlDict
+from indexer import create_index, InvertedIndex, urlDict, numOfIndexedDoc
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, urldefrag
 
@@ -37,7 +37,8 @@ def main():
         fileObject.close()                     
         urlNum[folder] = 0 # Number of urls from each folder (Just testing)
         i += 1
-    pickle.dump(urlDict, open('docID_to_url.txt', wb)))
+    pickle.dump(urlDict, open('docID_to_url.txt', 'wb'))
+    pickle.dump(numOfIndexedDoc, open('totalDocNum.txt', 'wb'))
     #final_index = InvertedIndex()
     '''
     i = 0

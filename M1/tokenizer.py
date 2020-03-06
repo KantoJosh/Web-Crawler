@@ -42,6 +42,18 @@ def tokenize_regex(exp,text):
         word_set.add(ps.stem(word.lower()))
     return word_set
 
+def frequency(exp, text):
+    wordOccurence = dict()
+    ps = PorterStemmer()
+    for esc_char in ["\n","\r","\t"]:
+            text = text.replace(esc_char," ")
+    tokens = re.findall(exp,text)
+    for word in tokens:
+        if word not in wordOccurence:
+            wordOccurence[word] = 1
+        else:
+            wordOccurence[word] += 1
+    return wordOccurence
 
 def _isal(char):
     '''Determines if char is alphanumeric (had to use my own version of isalnum 

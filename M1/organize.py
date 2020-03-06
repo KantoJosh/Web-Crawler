@@ -1,5 +1,5 @@
 import pickle
-from indexer import create_index, InvertedIndex, Posting
+from indexer import create_index, InvertedIndex
 def main():
     i = 0
     final_result = InvertedIndex()
@@ -11,6 +11,12 @@ def main():
         f.close()
         
     alphanumIndex = [dict() for i in range(27)] # length of alphabet + number = 26 + 1 = 27
+
+    # Just printing out the outputs of a large index (Delete this if needed)
+    #for key, value in final_result.getDict().items():
+    #   for key2, value2 in value.items():
+    #        print(key, key2, value2)
+    exit()
     # Creating separate dictionaries for each alphabet
     for i in final_result.getDict():
         if 97 <= ord(i[0]) <= 122: # if the key of the index is part of english alphabet

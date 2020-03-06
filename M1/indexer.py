@@ -5,7 +5,7 @@ import math
 import pickle
 import json
 from collections import defaultdict
-from tokenizer import tokenize_regex
+from tokenizer import tokenize_regex, frequency
 from bs4 import BeautifulSoup
 from nltk.stem import PorterStemmer
 from bs4 import BeautifulSoup
@@ -16,38 +16,12 @@ uniqueWords = set()
 urlDict = dict()
 docID = 0
 
-# Class for posting list
 # So you finish indexer w/ docID and tf first. Then use indexer (loop all) to get df for each word/docID...?
-class Posting:
-    def __init__(self,tfidf):
-        global docID
-        self.docID = docID
-        self.tf = 0
-        #self.df = 0
-        self.tfidf = tfidf
-
-    #def dfUpdate(self):
-    #    self.df = self.df + 1
-    # Update tf
-    def tfUpdate(self, tf):
-        self.tf = tf
-
-    # Returns tf
-    def gettf(self):
-        return self.tf
-
-    # Print docID and tf
-    def print(self):
-        print(self.docID, self.tf)
-        
-    # Print a list of docID and tf-idf
-    def showList(self):
-        print([self.docID, self.tfidf])
 
 # Class for inverted index
 class InvertedIndex:
     def __init__(self):
-        self.index = dict(list()) # indexer
+        self.index = dict(dict()) # indexer
         #self.postDict = dict()  # dictionary for Posting lists
 
     def __repr__(self):
@@ -56,20 +30,29 @@ class InvertedIndex:
     def getDict(self):
         return self.index
 
-    def merge(self, index):
-        for k in index.keys():
+    def merge(self, ArguIndex): # ArguIndex is a dictionary of dictionary {'token': {docId:tf, docID:tf,...}}
+        for k in ArguIndex.keys():  # k is token
             if k in self.index:
-                self.index[k].append(index[k])
+                for j in ArguIndex[k].keys():   # j is docID
+                    #j not in self.index[k]:
+                    self.index[k][j] = ArguIndex[k][j]
             else:
-                self.index[k] = [index[k]]
-        #return self.index.update(index)
+                self.index[k] = ArguIndex[k]    # index[k] returns a dictionary
+        #for k in index.keys():
+        #    if k in self.index:
+        #        self.index[k].append(index[k])
+        #    else:
+        #        self.index[k] = [index[k]]
+        
 
     def parse(self, text):
         return tokenize_regex("[a-zA-Z]{2,}|\d{1,}",text)
 
     def parsePage(self, soup):
         return self.parse(soup.get_text())
-        
+
+    def frequency(self, soup):
+        return frequency("[a-zA-Z]{2,}|\d{1,}",soup.get_text())
 
     def index_text(self, fileList, folder):
         # Get tokens from p tag and combine other tokens together in order to create indexer
@@ -90,32 +73,27 @@ class InvertedIndex:
             data = json.load(fileObj)
             urlDict[docID] = data['url']
             soup = BeautifulSoup(data['content'], "lxml") # Get delicious soup from html file
-            wordOccurence = dict() #(KEEP)
             tfDict = dict() #(KEEP)
+            wordOccurence = self.frequency(soup)
             parseAll = self.parsePage(soup) # Tokenize and stem text into tokens (p, bold, headers, and title)
-            #sizeOfText = len(parseAll)  # Get the total size of tokens (KEEP)
-
-            # Find the number of times a word appear in a url (Only works for one url for each iteration)
-            for t in parseAll: #(KEEP FOR LOOP)
-                if t not in wordOccurence:
-                    wordOccurence[t] = 1
-                else:
-                    wordOccurence[t] += 1
 
             # Getting tf for each words (Only works for one url for each iteration)
             for key in wordOccurence.keys():# (KEEP FOR LOOP)
-                tfDict[key] = wordOccurence[key] / sizeOfText
+                if wordOccurence[key] == 0:
+                    tfDict[key] = 0
+                else:
+                    tfDict[key] = 1 + math.log(wordOccurence[key], 10)
 
             word_set.update(parseAll)  # Combines all words (from all urls inside urlDict)
 
             for t in parseAll:
-                post = Posting(0)
-                post.tfUpdate(tfDict.get(t)) #(KEEP)
-                postList = [post]
+                postDict = defaultdict()
+                postDict[docID] = tfDict[key]
+                #self.index[t] = postDict
                 if t not in self.index:
-                    self.index[t] = postList
+                    self.index[t] = postDict
                 else:
-                    self.index[t].append(post)
+                    self.index[t][docID] = tfDict[key]
 
 
         #tf = 0 (KEEP)
