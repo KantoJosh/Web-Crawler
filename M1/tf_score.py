@@ -21,9 +21,13 @@ def main():
             current_dict = dict()
             for docID, tf in dictionary.items():
                 current_dict[docID] = round(tf * math.log(N/df, 10), 4)
+            # Sorting dict by tf-idf score
+            current_dict_sorted = {k: v for k, v in sorted(current_dict.items(), key=lambda x:x[1], reverse=True)}
             current_indexer.getDict()[token].clear()
-            current_indexer.getDict()[token] = current_dict
-                
+            current_indexer.getDict()[token] = current_dict_sorted
+
+        #sorted_dict = sorted(current_indexer.getDict().items(), key=lambda x: x[1][1], reverse=True)
+        
         f = open("tf_score_"+i + ".txt", 'wb')
         pickle.dump(current_indexer.getDict(), f)
         f.close()
