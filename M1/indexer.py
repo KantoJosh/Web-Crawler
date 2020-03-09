@@ -83,11 +83,13 @@ class InvertedIndex:
                     tfDict[key] = 0
                 else:
                     tfDict[key] = 1 + math.log(wordOccurence[key], 10)
+                #print(tfDict[key])
 
             word_set.update(parseAll)  # Combines all words (from all urls inside urlDict)
 
+            postDict = dict() #Change back to dict() if needed
             for t in parseAll:
-                postDict = defaultdict()
+                #postDict = dict()
                 postDict[docID] = tfDict[key]
                 #self.index[t] = postDict
                 if t not in self.index:

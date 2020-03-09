@@ -38,7 +38,7 @@ def main():
         urlNum[folder] = 0 # Number of urls from each folder (Just testing)
         i += 1
     pickle.dump(urlDict, open('docID_to_url.txt', 'wb'))
-    pickle.dump(numOfIndexedDoc, open('totalDocNum.txt', 'wb'))
+    #pickle.dump(numOfIndexedDoc, open('totalDocNum.txt', 'wb'))
     #final_index = InvertedIndex()
     '''
     i = 0
