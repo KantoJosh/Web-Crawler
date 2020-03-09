@@ -69,7 +69,7 @@ class InvertedIndex:
         for f in fileList:
             docID += 1
             numOfIndexedDoc += 1 # Number of indexed documents
-            fileObj = open("DEV/" + folder + "/" + f, 'r')
+            fileObj = open("DEV\\" + folder + "\\" + f, 'r')
             data = json.load(fileObj)
             urlDict[docID] = data['url']
             soup = BeautifulSoup(data['content'], "lxml") # Get delicious soup from html file
@@ -87,9 +87,9 @@ class InvertedIndex:
 
             word_set.update(parseAll)  # Combines all words (from all urls inside urlDict)
 
-            postDict = dict() #Change back to dict() if needed
+            #postDict = dict() #Change back to dict() if needed
             for t in parseAll:
-                #postDict = dict()
+                postDict = dict()
                 postDict[docID] = tfDict[key]
                 #self.index[t] = postDict
                 if t not in self.index:
