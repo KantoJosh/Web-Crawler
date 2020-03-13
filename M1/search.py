@@ -24,78 +24,84 @@ STOP_WORDS = {'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves'}
 
 if __name__ == "__main__":
-    translate = pickle.load(open("docID_to_url.txt", "rb")) #keeps track of which doc_id is assigned to which url, need to store as doc_id:url instead of url:doc_id
-    bookkeeper = pickle.load(open("bookkeeper.txt", "rb"))
+    with  open("docID_to_url.txt", "rb") as f:
+        translate = pickle.load(f) #keeps track of which doc_id is assigned to which url, need to store as doc_id:url instead of url:doc_id
+    with open("bookkeeper.txt", "rb") as f:
+        bookkeeper = pickle.load(f)
+
     ps = PorterStemmer()
     while True:
         try:
             query = input("Search for: ").strip("\n").split(" ")
             start = time.time()
             
+            # filter stop words from query
             for word in query:
                 if word in STOP_WORDS:
                     query.remove(word)
+
             print("QUERY AFTER STOP WORD FILTER: ", query)
+
             if query[0] == "":
                 print("Empty query. Exiting program")
                 break
             elif len(query) == 1:
                 item = ps.stem(query[0].lower()) #lowercase. need to stem
-                #print(f"Item = {item}")
                 file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
-                file = open(file_name, 'r') #TODO: grab term from bookkeeper index and use seek() to retrieve token line
                 offset = bookkeeper[item]# look for item from query in bookkeeper map
+
+                file = open(file_name, 'r') #ngrab term from bookkeeper index and use seek() to retrieve token line
                 file.seek(offset)
                 result = file.readline().split("-")
-                #print(f"Result = {result}")
+                file.close()
+                
                 docID_map = eval(result[1]) # map of docIDs to tf scores
-
-                with open("docID_to_url.txt","rb") as f:
-                    urlDict = pickle.load(f)
+                # sort docIDs by its tfidf score in decreasing manner
+                sorted_docID_keys = sorted(docID_map,key = lambda k: docID_map[k], reverse = True)
 
                 end = time.time()
                 print("TIME = ", end - start)
-                
+
+                # print top 10 results 
                 i = 10
-                for docID in sorted(docID_map,key = lambda k: docID_map[k], reverse = True):
-                    print(urlDict[docID])
+                for docID in sorted_docID_keys:
+                    print(translate[docID])
                     i -= 1
                     if i == 0:
                         break
-                file.close()
             else:
                 combined_tfidf_score_map  = defaultdict(int)# maps docID to 
-                results = []
                 for item in query: #loop through each term in search query
                     l = []
                     item = ps.stem(item.lower()) #lowercase. need to stem
                     file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
-                    file = open(file_name, 'r') #TODO: grab term from bookkeeper index and use seek() to retrieve token line
                     offset = bookkeeper[item]# look for item from query in bookkeeper map
+                    file = open(file_name, 'r') # grab term from bookkeeper index and use seek() to retrieve token line
                     file.seek(offset)
                     result = file.readline().split("-")
+                    file.close()
                     docID_map = eval(result[1]) # map of docIDs to tf scores
 
+                    # construct combined tf-idf score map (maps docID to combined tfidf score from other )
                     for docID in docID_map:
                         combined_tfidf_score_map[docID] += docID_map[docID]
                     
-
-                with open("docID_to_url.txt","rb") as f:
-                    urlDict = pickle.load(f)
-
+                sorted_tfidf_keys = sorted(combined_tfidf_score_map,key = lambda k: combined_tfidf_score_map[k], reverse = True)
                 end = time.time()
                 print("TIME = ", end - start)
 
+                # print top 10 results
                 i = 10
-                for docID in sorted(combined_tfidf_score_map,key = lambda k: docID_map[k], reverse = True):
-                    print("AA")
-                    print(urlDict[docID])
+                for docID in sorted_tfidf_keys:
+                    print(translate[docID])
                     i -= 1
                     if i == 0:
                         break
-                file.close() 
                     
             
         except Exception as e:
+            print()
+            raise e
+            print("ERROR:")
             print(str(e))
             break
