@@ -7,7 +7,7 @@ def main():
     final_result = InvertedIndex()
     
     # Load all indexes into one InvertedIndex() (class object for index)
-    for i in range(88):
+    for i in range(3):
         f = open("indexer"+str(i)+".txt", 'rb')
         final_result.merge(pickle.load(f))
         f.close()

@@ -49,11 +49,12 @@ def frequency(exp, text):
             text = text.replace(esc_char," ")
     tokens = re.findall(exp,text)
     for word in tokens:
-        if word not in wordOccurence:
-            wordOccurence[word] = 1
+        if ps.stem(word.lower()) not in wordOccurence:
+            wordOccurence[ps.stem(word.lower())] = 1
         else:
-            wordOccurence[word] += 1
+            wordOccurence[ps.stem(word.lower())] += 1
     return wordOccurence
+
 
 def _isal(char):
     '''Determines if char is alphanumeric (had to use my own version of isalnum 

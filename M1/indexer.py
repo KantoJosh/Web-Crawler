@@ -74,7 +74,7 @@ class InvertedIndex:
             urlDict[docID] = data['url']
             soup = BeautifulSoup(data['content'], "lxml") # Get delicious soup from html file
             tfDict = dict() #(KEEP)
-            wordOccurence = self.frequency(soup)
+            wordOccurence = self.frequency(soup)    # token to frequency count in f
             parseAll = self.parsePage(soup) # Tokenize and stem text into tokens (p, bold, headers, and title)
 
             # Getting tf for each words (Only works for one url for each iteration)
@@ -90,12 +90,12 @@ class InvertedIndex:
             #postDict = dict() #Change back to dict() if needed
             for t in parseAll:
                 postDict = dict()
-                postDict[docID] = tfDict[key]
+                postDict[docID] = tfDict[t]
                 #self.index[t] = postDict
                 if t not in self.index:
                     self.index[t] = postDict
                 else:
-                    self.index[t][docID] = tfDict[key]
+                    self.index[t][docID] = tfDict[t]
 
 
         #tf = 0 (KEEP)
