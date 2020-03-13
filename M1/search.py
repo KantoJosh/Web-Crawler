@@ -2,6 +2,7 @@ import pickle
 from nltk.stem import PorterStemmer
 import time
 from collections import defaultdict
+
 def intersection(l1, l2): 
     l3 = [value for value in l1 if value in l2] 
     return l3 
@@ -23,7 +24,7 @@ STOP_WORDS = {'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
 "we're", "we've", 'were', "weren't", 'what', "what's", 'when', "when's", 'where', "where's", 'which', 'while', 'who', "who's", 'whom', 'why', "why's", 
 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves'}
 
-if __name__ == "__main__":
+def main():
     with  open("docID_to_url.txt", "rb") as f:
         translate = pickle.load(f) #keeps track of which doc_id is assigned to which url, need to store as doc_id:url instead of url:doc_id
     with open("bookkeeper.txt", "rb") as f:
@@ -48,8 +49,10 @@ if __name__ == "__main__":
             elif len(query) == 1:
                 item = ps.stem(query[0].lower()) #lowercase. need to stem
                 file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
-                offset = bookkeeper[item]# look for item from query in bookkeeper map
-
+                offset = bookkeeper.get(item) # look for item from query in bookkeeper map
+                if offset == None:
+                    print("Could not find query in corpus")
+                    return
                 file = open(file_name, 'r') #ngrab term from bookkeeper index and use seek() to retrieve token line
                 file.seek(offset)
                 result = file.readline().split("-")
@@ -75,7 +78,10 @@ if __name__ == "__main__":
                     l = []
                     item = ps.stem(item.lower()) #lowercase. need to stem
                     file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
-                    offset = bookkeeper[item]# look for item from query in bookkeeper map
+                    offset = bookkeeper.get(item) # look for item from query in bookkeeper map
+                    if offset == None:
+                        print("Could not find query in corpus")
+                        return
                     file = open(file_name, 'r') # grab term from bookkeeper index and use seek() to retrieve token line
                     file.seek(offset)
                     result = file.readline().split("-")
@@ -105,3 +111,7 @@ if __name__ == "__main__":
             print("ERROR:")
             print(str(e))
             break
+
+
+if __name__ == "__main__":
+    main()
