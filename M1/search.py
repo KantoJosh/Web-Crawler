@@ -24,16 +24,18 @@ STOP_WORDS = {'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
 "we're", "we've", 'were', "weren't", 'what', "what's", 'when', "when's", 'where', "where's", 'which', 'while', 'who', "who's", 'whom', 'why', "why's", 
 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves'}
 
-def main():
+
+def search_query(query):
     with  open("docID_to_url.txt", "rb") as f:
         translate = pickle.load(f) #keeps track of which doc_id is assigned to which url, need to store as doc_id:url instead of url:doc_id
     with open("bookkeeper.txt", "rb") as f:
         bookkeeper = pickle.load(f)
 
     ps = PorterStemmer()
+    results = []
     while True:
         try:
-            query = input("Search for: ").strip("\n").split(" ")
+            query = query.split(" ")
             start = time.time()
             
             # filter stop words from query
@@ -68,6 +70,7 @@ def main():
                 # print top 10 results 
                 i = 10
                 for docID in sorted_docID_keys:
+                    results.append(translate[docID])
                     print(translate[docID])
                     i -= 1
                     if i == 0:
@@ -99,6 +102,7 @@ def main():
                 # print top 10 results
                 i = 10
                 for docID in sorted_tfidf_keys:
+                    results.append(translate[docID])
                     print(translate[docID])
                     i -= 1
                     if i == 0:
@@ -106,12 +110,13 @@ def main():
                     
             
         except Exception as e:
-            print()
-            raise e
             print("ERROR:")
             print(str(e))
             break
+    
+    return results
 
 
 if __name__ == "__main__":
-    main()
+    query = input("Enter a query")
+    search_query(query)
