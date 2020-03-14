@@ -4,7 +4,8 @@ import string
 from indexer import InvertedIndex
 
 def main():
-    alphabets = string.ascii_lowercase
+    alphabets = [chr(x) for x in range(ord('a'), ord('z') + 1)]
+    alphabets.append("num")
     current_dict = dict()
     N = 55393
 
@@ -12,7 +13,6 @@ def main():
         f = open(i+ ".txt", 'rb')
         current_indexer = InvertedIndex()
         current_indexer.merge(pickle.load(f))
-
         tf_idf_score = dict()
         f.close()
 
@@ -25,8 +25,6 @@ def main():
             current_dict_sorted = {k: v for k, v in sorted(current_dict.items(), key=lambda x:x[1], reverse=True)}
             current_indexer.getDict()[token].clear()
             current_indexer.getDict()[token] = current_dict_sorted
-
-        #sorted_dict = sorted(current_indexer.getDict().items(), key=lambda x: x[1][1], reverse=True)
         
         f = open("tf_score_"+i + ".txt", 'wb')
         pickle.dump(current_indexer.getDict(), f)

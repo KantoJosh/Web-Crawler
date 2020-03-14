@@ -16,18 +16,9 @@ from urllib.parse import urlparse, urljoin, urldefrag
 
 
 def main():
-    #if len(sys.argv) <= 1:
-    #    print('Need a HTML/JSON file to open')
-    #    exit()
-    #cwd = os.getcwd()
-    #print(cwd)
     listFolder = os.listdir("DEV")  # gets list of sub folder names in DEV/
-    #data = []
-    #urlDict = dict()
     urlNum = dict()
-    #url = ''
     i = 0
-    #docID = 0
     for folder in listFolder:
         files = [f for f in listdir("DEV/"+folder) if isfile(join("DEV/"+folder, f))] # every file in var folder
         index = create_index(files, folder) # one index per folder in DEV
@@ -38,19 +29,6 @@ def main():
         urlNum[folder] = 0 # Number of urls from each folder (Just testing)
         i += 1
     pickle.dump(urlDict, open('docID_to_url.txt', 'wb'))
-    #pickle.dump(numOfIndexedDoc, open('totalDocNum.txt', 'wb'))
-    #final_index = InvertedIndex()
-    '''
-    i = 0
-    for folder in listFolder:
-        index = create_index(urlDict[folder])
-        filename = "indexer" + str(i) + ".txt"
-        fileObject = open(filename, 'wb')
-        pickle.dump(index.getDict(), fileObject)
-        fileObject.close()
-        i += 1
-        #final_index.merge(index.getDict())
-    '''
     
 
 

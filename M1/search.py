@@ -45,12 +45,15 @@ def search_query(query):
 
             print("QUERY AFTER STOP WORD FILTER: ", query)
 
-            if query[0] == "":
+            if len(query) == 0:
                 print("Empty query. Exiting program")
                 break
             elif len(query) == 1:
                 item = ps.stem(query[0].lower()) #lowercase. need to stem
-                file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
+                if item[0].isdigit():
+                    file_name = 'num.txt'
+                else:
+                    file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
                 offset = bookkeeper.get(item) # look for item from query in bookkeeper map
                 if offset == None:
                     print("Could not find query in corpus")
@@ -80,7 +83,10 @@ def search_query(query):
                 for item in query: #loop through each term in search query
                     l = []
                     item = ps.stem(item.lower()) #lowercase. need to stem
-                    file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
+                    if item[0].isdigit():
+                        file_name = 'num.txt'
+                    else:
+                        file_name = item[0] + ".txt" #take first letter of term and open the corresponding index file
                     offset = bookkeeper.get(item) # look for item from query in bookkeeper map
                     if offset == None:
                         print("Could not find query in corpus")
@@ -118,5 +124,5 @@ def search_query(query):
 
 
 if __name__ == "__main__":
-    query = input("Enter a query")
+    query = input("Enter a query: ")
     search_query(query)

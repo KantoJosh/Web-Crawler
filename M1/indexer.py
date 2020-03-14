@@ -16,13 +16,10 @@ uniqueWords = set()
 urlDict = dict()
 docID = 0
 
-# So you finish indexer w/ docID and tf first. Then use indexer (loop all) to get df for each word/docID...?
-
 # Class for inverted index
 class InvertedIndex:
     def __init__(self):
         self.index = dict(dict()) # indexer
-        #self.postDict = dict()  # dictionary for Posting lists
 
     def __repr__(self):
         return str(self.index)
@@ -38,13 +35,7 @@ class InvertedIndex:
                     self.index[k][j] = ArguIndex[k][j]
             else:
                 self.index[k] = ArguIndex[k]    # index[k] returns a dictionary
-        #for k in index.keys():
-        #    if k in self.index:
-        #        self.index[k].append(index[k])
-        #    else:
-        #        self.index[k] = [index[k]]
         
-
     def parse(self, text):
         return tokenize_regex("[a-zA-Z]{2,}|\d{1,}",text)
 
@@ -64,8 +55,6 @@ class InvertedIndex:
         word_set = set()
         sizeOfText = 0 # Total number of words in the url (KEEP)
         tfDict = dict() # Number of times a word appear in a url divided by the total number of words in the url
-        #df = {} # Number of urls that contain a word
-        #numOfUrls = len(urlList) # Use this to get idf (Number of urls divided by number of urls that contain a word) (KEEP)
         for f in fileList:
             docID += 1
             numOfIndexedDoc += 1 # Number of indexed documents
@@ -83,11 +72,9 @@ class InvertedIndex:
                     tfDict[key] = 0
                 else:
                     tfDict[key] = 1 + math.log(wordOccurence[key], 10)
-                #print(tfDict[key])
 
             word_set.update(parseAll)  # Combines all words (from all urls inside urlDict)
 
-            #postDict = dict() #Change back to dict() if needed
             for t in parseAll:
                 postDict = dict()
                 postDict[docID] = tfDict[t]
@@ -96,16 +83,7 @@ class InvertedIndex:
                     self.index[t] = postDict
                 else:
                     self.index[t][docID] = tfDict[t]
-
-
-        #tf = 0 (KEEP)
         uniqueWords.update(word_set)
-        #uniqueWords = uniqueWords | word_set # wordDictionary is the set for one folder whereas uniqueWords is the set for all folders
-
-        #for word in word_set: # Calculating tf-idf (KEEP FOR LOOP)
-        #    for postList in self.index.get(word):
-        #        tf = postList.gettf()
-        #        postList.tfidfUpdate(tf * (math.log(numOfUrls/len(self.index.get(word)))))
         
 
 def create_index(fileList, folder):
