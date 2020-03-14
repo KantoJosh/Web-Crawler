@@ -15,16 +15,15 @@ def main():
         current_indexer.merge(pickle.load(f))
         tf_idf_score = dict()
         f.close()
-
+        # Calculating tf-idf score for each separate index
         for token, dictionary in current_indexer.getDict().items():
             df = len(dictionary.keys())
             current_dict = dict()
             for docID, tf in dictionary.items():
                 current_dict[docID] = round(tf * math.log(N/df, 10), 4)
-            # Sorting dict by tf-idf score
             current_indexer.getDict()[token].clear()
             current_indexer.getDict()[token] = current_dict
-        
+        # Store the results into tf_score_(insert here).txt
         f = open("tf_score_"+i + ".txt", 'wb')
         pickle.dump(current_indexer.getDict(), f)
         f.close()
