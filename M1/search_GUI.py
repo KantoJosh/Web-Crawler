@@ -12,7 +12,7 @@ def index():
 	if request.method == "POST":
 		text = request.form['text']
 		print("TEXT = ", text)
-        urls = search_query(text)
+		urls = search_query(text)
 		### PASS QUERY INTO MAIN HERE, then pass results INTO FUNC BELOW
 		return render_template("results.html",query = text, result = urls)
 	return render_template("search.html")
