@@ -1,4 +1,4 @@
-# Assignment3
+# Web Crawler
 
 In order to run the search engine:
 
